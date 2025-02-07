@@ -2,6 +2,16 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import PopulationChart from "./PopulationChart.vue";
+import Highcharts from "highcharts";
+import Accessibility from "highcharts/modules/accessibility";
+
+// Accessibilityモジュールを適用
+if (typeof Accessibility === "function") {
+  Accessibility(Highcharts);
+} else {
+  console.warn("Accessibility module is not a function.");
+}
+
 
 interface Prefecture {
   prefCode: number;
@@ -32,6 +42,7 @@ const fetchPrefectures = async () => {
 // 人口データを取得し、グラフを更新
 const fetchPopulationData = async () => {
   const seriesData: any[] = [];
+  const years: string[] = []; 
   for (const prefCode of selectedPrefectures.value) {
     try {
       const response = await axios.get(
@@ -43,6 +54,14 @@ const fetchPopulationData = async () => {
       const validData = populationData.data.map((d: any) => {
         return isNaN(d.value) ? 0 : d.value; // NaN を 0 に変換
       });
+      const yearsForPref = populationData.data.map((d: any) => {
+        const year = d.year; 
+
+        return year >= 1900 ? year : year + 2000; // 例: 2000年以降はそのまま、1900年代は2000年代に補正
+      });
+
+      // 西暦の年度を更新
+      years.push(...yearsForPref);
 
       seriesData.push({
         name: prefectures.value.find((p) => p.prefCode === prefCode)?.prefName,

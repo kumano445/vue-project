@@ -2,7 +2,6 @@
 <script setup lang="ts">
 import { ref, defineExpose, onMounted } from "vue";
 import Highcharts from "highcharts";
-import HighchartsVue from "highcharts-vue"; // 必要に応じてインポート
 
 const chartContainer = ref<HTMLDivElement | null>(null);
 
@@ -10,8 +9,13 @@ const chartOptions = ref({
   chart: { type: "line" },
   title: { text: "" },
   xAxis: {
-    categories: [],
+    categories: [], 
     title: { text: "年" },
+    labels: {
+      formatter: function () {
+        return this.value; 
+      },
+    },
   },
   yAxis: {
     title: { text: "人口" },
