@@ -3,14 +3,15 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import PopulationChart from "./PopulationChart.vue";
 import Highcharts from "highcharts";
-import Accessibility from "highcharts/modules/accessibility";
+import AccessibilityModule from "highcharts/modules/accessibility";
 
 // Accessibilityモジュールを適用
-if (typeof Accessibility === "function") {
-  Accessibility(Highcharts);
+if (typeof AccessibilityModule === "function") {
+  AccessibilityModule(Highcharts);
 } else {
   console.warn("Accessibility module is not a function.");
 }
+
 
 
 interface Prefecture {
@@ -22,6 +23,15 @@ const prefectures = ref<Prefecture[]>([]);
 const selectedPrefectures = ref<number[]>([]);
 const chartRef = ref<any>(null);
 const selectedCategory = ref<string>("総人口");
+
+// 環境変数から API キーを取得
+const RESAS_API_KEY = import.meta.env.VITE_RESAS_API_KEY;
+console.log("API Key:", RESAS_API_KEY);
+
+if (!RESAS_API_KEY) {
+  console.error("RESAS APIキーが設定されていません。`.env.local` を確認してください。");
+}
+
 
 // 都道府県一覧を取得
 const fetchPrefectures = async () => {
