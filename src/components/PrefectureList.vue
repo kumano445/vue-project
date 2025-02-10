@@ -39,7 +39,7 @@ const fetchPrefectures = async () => {
     const response = await axios.get(
       "https://yumemi-frontend-engineer-codecheck-api.vercel.app/api/v1/prefectures",
       {
-        headers: { "X-API-KEY": "8FzX5qLmN3wRtKjH7vCyP9bGdEaU4sYpT6cMfZnJ" },
+        headers: { "X-API-KEY": RESAS_API_KEY },
       }
     );
     prefectures.value = response.data.result;
@@ -57,7 +57,7 @@ const fetchPopulationData = async () => {
     try {
       const response = await axios.get(
         `https://yumemi-frontend-engineer-codecheck-api.vercel.app/api/v1/population/composition/perYear?prefCode=${prefCode}`,
-        { headers: { "X-API-KEY": "8FzX5qLmN3wRtKjH7vCyP9bGdEaU4sYpT6cMfZnJ" } }
+        { headers: { "X-API-KEY": RESAS_API_KEY }}
       );
 
       const populationData = response.data.result.data.find((item: any) => item.label === selectedCategory.value);
